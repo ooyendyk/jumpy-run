@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float gravityModifier = 2f;
     public bool isOnGround = true;
     public bool gameOver;
+    public bool useGravity = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +24,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
-        Physics.gravity *= gravityModifier;
+        //Physics.gravity *= gravityModifier;
     }
 
     // Update is called once per frame
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
             isOnGround = false;
             dirtParticle.Stop();
             playerAudio.PlayOneShot(jumpSound, 1.0f);
+            FixedUpdate();
         }
     }
 
@@ -53,5 +56,10 @@ public class PlayerController : MonoBehaviour
             dirtParticle.Stop();
             playerAudio.PlayOneShot(crashSound, 1.0f);
         }
+    }
+    void FixedUpdate()
+    {
+        GetComponent<Rigidbody>().useGravity = false;
+        if (useGravity) GetComponent<Rigidbody>().AddForce(Physics.gravity * (GetComponent<Rigidbody>().mass * 20/*GetComponent<Rigidbody>().mass*/));
     }
 }
